@@ -61,7 +61,8 @@ const Index = () => {
             className="text-center"
           >
             <h1 className="font-display text-4xl md:text-6xl lg:text-7xl mb-4">
-              <span className="metal-text">Justin Thiadi</span>
+              <span className="text-foreground">Justin</span>
+              <span className="metal-text"> Thiadi</span>
             </h1>
             <p className="text-muted-foreground font-body text-lg md:text-xl">
               Developer • Creator • Builder
