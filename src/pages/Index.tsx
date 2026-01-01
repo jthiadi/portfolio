@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import { Suspense, useMemo } from 'react'; // Added useMemo for efficiency
 import { motion } from 'framer-motion';
 import { RobotScene } from '@/components/RobotScene';
 import { ProjectCard } from '@/components/ProjectCard';
@@ -21,6 +21,18 @@ function LoadingFallback() {
 
 const Index = () => {
   const { repos, loading: reposLoading, error: reposError } = useGitHubRepos(GITHUB_USERNAME);
+
+  // 1. Logic to extract unique languages from your GitHub repositories
+  const skills = useMemo(() => {
+    if (!repos) return [];
+    const languages = repos
+      .map((repo) => repo.language)
+      .filter((lang): lang is string => lang !== null);
+    
+    // Use Set to ensure each language (Verilog, C++, etc.) appears only once
+    return Array.from(new Set(languages)).sort();
+  }, [repos]);
+
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
       {/* Background gradient effects */}
@@ -40,7 +52,6 @@ const Index = () => {
           >
           </motion.div>
 
-          {/* 3D Robot Scene */}
           <Suspense fallback={<LoadingFallback />}>
             <RobotScene />
           </Suspense>
@@ -64,7 +75,7 @@ const Index = () => {
           </motion.div>
         </section>
 
-        {/* About Section */}
+        {/* Updated Section: Technical Skills */}
         <section id="about" className="py-16 px-6">
           <div className="container mx-auto max-w-3xl">
             <motion.div
@@ -80,22 +91,37 @@ const Index = () => {
               <div className="absolute bottom-4 left-4 rivet" />
               <div className="absolute bottom-4 right-4 rivet" />
 
-              <div className="flex items-center gap-4 mb-6">
+              <div className="flex items-center gap-4 mb-8">
                 <div className="w-4 h-4 gauge-indicator" />
                 <h2 className="font-display text-2xl md:text-3xl text-foreground">
-                  About <span className="text-primary">Me</span>
+                  Technical <span className="text-primary">Skills</span>
                 </h2>
               </div>
 
-              <p className="text-muted-foreground font-body leading-relaxed mb-4">
-                I'm a passionate developer who loves building things that live on the internet. 
-                My interest in web development started back when I first discovered how websites work,
-                and I've been hooked ever since.
-              </p>
-              <p className="text-muted-foreground font-body leading-relaxed">
-                When I'm not coding, you can find me exploring new technologies, contributing to 
-                open source, or tinkering with side projects. I believe in writing clean, 
-                maintainable code and creating user experiences that just work.
+              {reposLoading ? (
+                <div className="flex items-center gap-2 text-muted-foreground italic">
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Fetching skills from GitHub...
+                </div>
+              ) : skills.length > 0 ? (
+                <div className="flex flex-wrap gap-3">
+                  {skills.map((skill) => (
+                    <span 
+                      key={skill}
+                      className="px-4 py-2 rounded-md bg-secondary/50 border border-border text-foreground font-display text-sm hover:border-primary transition-colors cursor-default"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-muted-foreground font-body">
+                  No public languages found on GitHub.
+                </p>
+              )}
+
+              <p className="mt-8 text-xs text-muted-foreground uppercase tracking-widest font-display opacity-50">
+                Automatically generated from project data
               </p>
             </motion.div>
           </div>
@@ -128,11 +154,7 @@ const Index = () => {
                 </div>
               ) : reposError ? (
                 <div className="col-span-full text-center py-12 text-muted-foreground">
-                  Unable to load repositories. Please check the username.
-                </div>
-              ) : repos.length === 0 ? (
-                <div className="col-span-full text-center py-12 text-muted-foreground">
-                  No repositories found.
+                  Unable to load repositories.
                 </div>
               ) : (
                 repos.map((repo, index) => (
