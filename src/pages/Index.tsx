@@ -39,11 +39,6 @@ const Index = () => {
             transition={{ duration: 0.6 }}
             className="flex items-center justify-center gap-2 mb-4"
           >
-            /*<div className="w-2 h-2 gauge-indicator animate-pulse-glow" />
-            <span className="text-muted-foreground font-display text-xs tracking-wider">
-              HOVER TO INTERACT
-            </span>
-            <div className="w-2 h-2 gauge-indicator animate-pulse-glow" />*/
           </motion.div>
 
           {/* 3D Robot Scene */}
