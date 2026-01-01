@@ -22,15 +22,16 @@ function LoadingFallback() {
 const Index = () => {
   const { repos, loading: reposLoading, error: reposError } = useGitHubRepos(GITHUB_USERNAME);
 
-  // 1. Logic to extract unique languages from your GitHub repositories
   const skills = useMemo(() => {
-    if (!repos) return [];
-    const languages = repos
+    if (!repos) return ["React"]; 
+    
+    const githubLanguages = repos
       .map((repo) => repo.language)
       .filter((lang): lang is string => lang !== null);
     
-    // Use Set to ensure each language (Verilog, C++, etc.) appears only once
-    return Array.from(new Set(languages)).sort();
+    const manualSkills = ["React"];
+    
+    return Array.from(new Set([...githubLanguages, ...manualSkills])).sort();
   }, [repos]);
 
   return (
@@ -120,9 +121,6 @@ const Index = () => {
                 </p>
               )}
 
-              <p className="mt-8 text-xs text-muted-foreground uppercase tracking-widest font-display opacity-50">
-                Automatically generated from project data
-              </p>
             </motion.div>
           </div>
         </section>
