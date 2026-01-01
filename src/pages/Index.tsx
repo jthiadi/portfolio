@@ -6,7 +6,6 @@ import { Footer } from '@/components/Footer';
 import { Loader2 } from 'lucide-react';
 import { useGitHubRepos } from '@/hooks/use-github-repos';
 
-// Replace with your GitHub username
 const GITHUB_USERNAME = 'jthiadi';
 
 function LoadingFallback() {
@@ -156,8 +155,8 @@ const Index = () => {
       </main>
 
       <Footer 
-        githubUrl="https://github.com/yourusername" 
-        linkedinUrl="https://linkedin.com/in/yourusername" 
+        githubUrl="https://github.com/jthiadi" 
+        linkedinUrl="https://linkedin.com/in/jthiadi" 
       />
     </div>
   );

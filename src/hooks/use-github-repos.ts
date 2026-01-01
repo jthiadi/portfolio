@@ -26,8 +26,9 @@ export function useGitHubRepos(username: string) {
     const fetchRepos = async () => {
       try {
         setLoading(true);
+        // 1. Increased per_page to 100 to get all projects
         const response = await fetch(
-          `https://api.github.com/users/${username}/repos?sort=updated&per_page=8`
+          `https://api.github.com/users/${username}/repos?sort=updated&per_page=100`
         );
         
         if (!response.ok) {
@@ -36,11 +37,18 @@ export function useGitHubRepos(username: string) {
         
         const data: GitHubRepo[] = await response.json();
         
-        // Filter and sort by stars, then take top repos
-        const sortedRepos = data
-          .filter(repo => !repo.name.includes('.github.io')) // Exclude portfolio repo
-          .sort((a, b) => b.stargazers_count - a.stargazers_count)
-          .slice(0, 4);
+        // 2. Filter out specific repos: .github.io, jthiadi, and portfolio
+        const filteredRepos = data.filter(repo => {
+          const name = repo.name.toLowerCase();
+          return (
+            !name.includes('.github.io') && 
+            name !== 'jthiadi' && 
+            name !== 'portfolio'
+          );
+        });
+
+        // 3. Sort by stars and REMOVED .slice(0, 4) to show everything
+        const sortedRepos = filteredRepos.sort((a, b) => b.stargazers_count - a.stargazers_count);
         
         setRepos(sortedRepos);
         setError(null);
