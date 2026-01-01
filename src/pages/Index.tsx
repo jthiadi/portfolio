@@ -36,7 +36,8 @@ const Index = () => {
       "Git", 
       "TypeScript", 
       "PyTorch", 
-      "OpenCV"];
+      "OpenCV",
+    "Verilog"];
     
     return Array.from(new Set([...githubLanguages, ...manualSkills])).sort();
   }, [repos]);
