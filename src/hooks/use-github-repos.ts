@@ -26,7 +26,6 @@ export function useGitHubRepos(username: string) {
     const fetchRepos = async () => {
       try {
         setLoading(true);
-        // 1. Increased per_page to 100 to get all projects
         const response = await fetch(
           `https://api.github.com/users/${username}/repos?sort=updated&per_page=100`
         );
@@ -37,20 +36,31 @@ export function useGitHubRepos(username: string) {
         
         const data: GitHubRepo[] = await response.json();
         
-        // 2. Filter out specific repos: .github.io, jthiadi, and portfolio
-        const filteredRepos = data.filter(repo => {
-          const name = repo.name.toLowerCase();
-          return (
-            !name.includes('.github.io') && 
-            name !== 'jthiadi' && 
-            name !== 'portfolio'
-          );
-        });
+        // List of repository names to hide from the portfolio
+        const excludedRepos = [
+          'jthiadi',
+          'portfolio',
+          'verilog-basics',
+          'computer-vision-basics',
+          'machine-learning-basics',
+          'applications-of-data-structures',
+          'mips-assembly-programming',
+          'application-of-linear-algebra',
+          'dart-flutter-firebase-basics'
+        ];
 
-        // 3. Sort by stars and REMOVED .slice(0, 4) to show everything
-        const sortedRepos = filteredRepos.sort((a, b) => b.stargazers_count - a.stargazers_count);
+        // Filter and sort
+        const filteredRepos = data
+          .filter(repo => {
+            const name = repo.name.toLowerCase();
+            return (
+              !name.includes('.github.io') && 
+              !excludedRepos.includes(name)
+            );
+          })
+          .sort((a, b) => b.stargazers_count - a.stargazers_count);
         
-        setRepos(sortedRepos);
+        setRepos(filteredRepos);
         setError(null);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An error occurred');
