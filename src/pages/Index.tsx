@@ -29,7 +29,14 @@ const Index = () => {
       .map((repo) => repo.language)
       .filter((lang): lang is string => lang !== null);
     
-    const manualSkills = ["React"];
+    const manualSkills = [
+      "React", 
+      "C++", 
+      "Firebase", 
+      "Git", 
+      "TypeScript", 
+      "PyTorch", 
+      "OpenCV"];
     
     return Array.from(new Set([...githubLanguages, ...manualSkills])).sort();
   }, [repos]);
