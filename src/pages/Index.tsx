@@ -156,7 +156,7 @@ const Index = () => {
 
       <Footer 
         githubUrl="https://github.com/jthiadi" 
-        linkedinUrl="https://linkedin.com/in/jthiadi" 
+        linkedinUrl="https://linkedin.com/in/justinthiadi" 
       />
     </div>
   );
